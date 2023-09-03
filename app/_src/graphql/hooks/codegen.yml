@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+    -   https://api.github.com/graphql:
+            headers:
+                User-Agent: onlypositivemind
+                Authorization: 'Bearer ${GITHUB_PERSONAL_TOKEN}'
+documents: './app/_src/graphql/documents/**/*.gql'
+generates:
+    ./app/_src/graphql/hooks/__generated__.ts:
+        plugins:
+            - typescript
+            - typescript-operations
+            - typescript-react-apollo
+config:
+    maybeValue: 'T'
+    immutableTypes: true

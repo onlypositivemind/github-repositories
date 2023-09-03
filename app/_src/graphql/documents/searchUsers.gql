@@ -1,0 +1,16 @@
+query SearchUsers($after: String, $before: String, $first: Int, $last: Int, $query: String!, $type: SearchType!) {
+    search(after: $after, before: $before, first: $first, last: $last, query: $query, type: $type) {
+        nodes {
+            ... on User {
+                id
+                login
+                name
+                avatarUrl(size: 100)
+                status {
+                    emoji
+                    message
+                }
+            }
+        }
+    }
+}
