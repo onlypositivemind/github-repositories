@@ -6093,6 +6093,19 @@ export type EnterpriseBillingInfo = {
     readonly totalLicenses: Scalars['Int']['output'];
 };
 
+/** The connection type for Enterprise. */
+export type EnterpriseConnection = {
+    readonly __typename?: 'EnterpriseConnection';
+    /** A list of edges. */
+    readonly edges?: Maybe<ReadonlyArray<Maybe<EnterpriseEdge>>>;
+    /** A list of nodes. */
+    readonly nodes?: Maybe<ReadonlyArray<Maybe<Enterprise>>>;
+    /** Information to aid in pagination. */
+    readonly pageInfo: PageInfo;
+    /** Identifies the total count of items in the connection. */
+    readonly totalCount: Scalars['Int']['output'];
+};
+
 /** The possible values for the enterprise base repository permission setting. */
 export enum EnterpriseDefaultRepositoryPermissionSettingValue {
     /** Organization members will be able to clone, pull, push, and add new collaborators to all organization repositories. */
@@ -6106,6 +6119,15 @@ export enum EnterpriseDefaultRepositoryPermissionSettingValue {
     /** Organization members will be able to clone, pull, and push all organization repositories. */
     Write = 'WRITE',
 }
+
+/** An edge in a connection. */
+export type EnterpriseEdge = {
+    readonly __typename?: 'EnterpriseEdge';
+    /** A cursor for use in pagination. */
+    readonly cursor: Scalars['String']['output'];
+    /** The item at the end of the edge. */
+    readonly node?: Maybe<Enterprise>;
+};
 
 /** The possible values for an enabled/disabled enterprise setting. */
 export enum EnterpriseEnabledDisabledSettingValue {
@@ -6243,6 +6265,32 @@ export enum EnterpriseMembersCanMakePurchasesSettingValue {
     Disabled = 'DISABLED',
     /** The setting is enabled for organizations in the enterprise. */
     Enabled = 'ENABLED',
+}
+
+/** The possible values we have for filtering Platform::Objects::User#enterprises. */
+export enum EnterpriseMembershipType {
+    /** Returns all enterprises in which the user is an admin. */
+    Admin = 'ADMIN',
+    /** Returns all enterprises in which the user is a member, admin, or billing manager. */
+    All = 'ALL',
+    /** Returns all enterprises in which the user is a billing manager. */
+    BillingManager = 'BILLING_MANAGER',
+    /** Returns all enterprises in which the user is a member of an org that is owned by the enterprise. */
+    OrgMembership = 'ORG_MEMBERSHIP',
+}
+
+/** Ordering options for enterprises. */
+export type EnterpriseOrder = {
+    /** The ordering direction. */
+    readonly direction: OrderDirection;
+    /** The field to order enterprises by. */
+    readonly field: EnterpriseOrderField;
+};
+
+/** Properties by which enterprise connections can be ordered. */
+export enum EnterpriseOrderField {
+    /** Order enterprises by name */
+    Name = 'NAME',
 }
 
 /** The connection type for Organization. */
@@ -24258,7 +24306,7 @@ export type StartRepositoryMigrationInput = {
     readonly accessToken?: InputMaybe<Scalars['String']['input']>;
     /** A unique identifier for the client performing the mutation. */
     readonly clientMutationId?: InputMaybe<Scalars['String']['input']>;
-    /** Whether to continue the migration on error. Defaults to `false`. We strongly recommend setting this to `true` for the smoothest migration experience. *This default will change to `true` on September 4, 2023.* */
+    /** Whether to continue the migration on error. Defaults to `true`. */
     readonly continueOnError?: InputMaybe<Scalars['Boolean']['input']>;
     /** The signed URL to access the user-uploaded git archive. */
     readonly gitArchiveUrl?: InputMaybe<Scalars['String']['input']>;
@@ -27572,6 +27620,8 @@ export type User = Actor &
         readonly databaseId?: Maybe<Scalars['Int']['output']>;
         /** The user's publicly visible profile email. */
         readonly email: Scalars['String']['output'];
+        /** A list of enterprises that the user belongs to. */
+        readonly enterprises?: Maybe<EnterpriseConnection>;
         /** The estimated next GitHub Sponsors payout for this user/organization in cents (USD). */
         readonly estimatedNextSponsorsPayoutInCents: Scalars['Int']['output'];
         /** A list of users the given user is followed by. */
@@ -27758,6 +27808,16 @@ export type UserContributionsCollectionArgs = {
     from?: InputMaybe<Scalars['DateTime']['input']>;
     organizationID?: InputMaybe<Scalars['ID']['input']>;
     to?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+/** A user is an individual's account on GitHub that owns repositories and can make new content. */
+export type UserEnterprisesArgs = {
+    after?: InputMaybe<Scalars['String']['input']>;
+    before?: InputMaybe<Scalars['String']['input']>;
+    first?: InputMaybe<Scalars['Int']['input']>;
+    last?: InputMaybe<Scalars['Int']['input']>;
+    membershipType?: InputMaybe<EnterpriseMembershipType>;
+    orderBy?: InputMaybe<EnterpriseOrder>;
 };
 
 /** A user is an individual's account on GitHub that owns repositories and can make new content. */
@@ -28558,6 +28618,100 @@ export enum WorkflowState {
     DisabledManually = 'DISABLED_MANUALLY',
 }
 
+export type GetRepositoryQueryVariables = Exact<{
+    name: Scalars['String']['input'];
+    owner: Scalars['String']['input'];
+}>;
+
+export type GetRepositoryQuery = {
+    readonly __typename?: 'Query';
+    readonly repository?: {
+        readonly __typename?: 'Repository';
+        readonly id: string;
+        readonly forkCount: number;
+        readonly description?: string;
+        readonly isPrivate: boolean;
+        readonly name: string;
+        readonly url: any;
+        readonly stargazerCount: number;
+        readonly issues: {
+            readonly __typename?: 'IssueConnection';
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<{
+                readonly __typename?: 'Issue';
+                readonly body: string;
+                readonly closed: boolean;
+                readonly bodyText: string;
+                readonly id: string;
+                readonly title: string;
+                readonly url: any;
+                readonly author?:
+                    | {
+                          readonly __typename?: 'Bot';
+                          readonly avatarUrl: any;
+                          readonly login: string;
+                          readonly url: any;
+                      }
+                    | {
+                          readonly __typename?: 'EnterpriseUserAccount';
+                          readonly avatarUrl: any;
+                          readonly login: string;
+                          readonly url: any;
+                      }
+                    | {
+                          readonly __typename?: 'Mannequin';
+                          readonly avatarUrl: any;
+                          readonly login: string;
+                          readonly url: any;
+                      }
+                    | {
+                          readonly __typename?: 'Organization';
+                          readonly avatarUrl: any;
+                          readonly login: string;
+                          readonly url: any;
+                      }
+                    | {
+                          readonly __typename?: 'User';
+                          readonly avatarUrl: any;
+                          readonly login: string;
+                          readonly url: any;
+                      };
+                readonly labels?: {
+                    readonly __typename?: 'LabelConnection';
+                    readonly nodes?: ReadonlyArray<{
+                        readonly __typename?: 'Label';
+                        readonly color: string;
+                        readonly id: string;
+                        readonly name: string;
+                    }>;
+                };
+            }>;
+        };
+        readonly owner:
+            | {
+                  readonly __typename?: 'Organization';
+                  readonly avatarUrl: any;
+                  readonly login: string;
+              }
+            | { readonly __typename?: 'User'; readonly avatarUrl: any; readonly login: string };
+        readonly languages?: {
+            readonly __typename?: 'LanguageConnection';
+            readonly totalCount: number;
+            readonly totalSize: number;
+            readonly edges?: ReadonlyArray<{
+                readonly __typename?: 'LanguageEdge';
+                readonly size: number;
+                readonly node: {
+                    readonly __typename?: 'Language';
+                    readonly color?: string;
+                    readonly id: string;
+                    readonly name: string;
+                };
+            }>;
+        };
+    };
+};
+
 export type SearchUsersQueryVariables = Exact<{
     after?: InputMaybe<Scalars['String']['input']>;
     before?: InputMaybe<Scalars['String']['input']>;
@@ -28587,7 +28741,6 @@ export type SearchUsersQuery = {
                   readonly avatarUrl: any;
                   readonly status?: {
                       readonly __typename?: 'UserStatus';
-                      readonly emoji?: string;
                       readonly message?: string;
                   };
               }
@@ -28595,6 +28748,211 @@ export type SearchUsersQuery = {
     };
 };
 
+export type GetUserFollowersQueryVariables = Exact<{
+    login: Scalars['String']['input'];
+    last: Scalars['Int']['input'];
+}>;
+
+export type GetUserFollowersQuery = {
+    readonly __typename?: 'Query';
+    readonly user?: {
+        readonly __typename?: 'User';
+        readonly followers: {
+            readonly __typename?: 'FollowerConnection';
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<{
+                readonly __typename?: 'User';
+                readonly id: string;
+                readonly avatarUrl: any;
+                readonly url: any;
+                readonly login: string;
+            }>;
+        };
+    };
+};
+
+export type GetUserOrganizationsQueryVariables = Exact<{
+    login: Scalars['String']['input'];
+}>;
+
+export type GetUserOrganizationsQuery = {
+    readonly __typename?: 'Query';
+    readonly user?: {
+        readonly __typename?: 'User';
+        readonly organizations: {
+            readonly __typename?: 'OrganizationConnection';
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<{
+                readonly __typename?: 'Organization';
+                readonly avatarUrl: any;
+                readonly description?: string;
+                readonly id: string;
+                readonly email?: string;
+                readonly login: string;
+                readonly name?: string;
+                readonly url: any;
+                readonly location?: string;
+            }>;
+        };
+    };
+};
+
+export type GetUserProfileQueryVariables = Exact<{
+    login: Scalars['String']['input'];
+}>;
+
+export type GetUserProfileQuery = {
+    readonly __typename?: 'Query';
+    readonly user?: {
+        readonly __typename?: 'User';
+        readonly id: string;
+        readonly login: string;
+        readonly name?: string;
+        readonly url: any;
+        readonly avatarUrl: any;
+        readonly company?: string;
+        readonly followers: {
+            readonly __typename?: 'FollowerConnection';
+            readonly totalCount: number;
+        };
+        readonly following: {
+            readonly __typename?: 'FollowingConnection';
+            readonly totalCount: number;
+        };
+    };
+};
+
+export type GetUserRepositoriesQueryVariables = Exact<{
+    login: Scalars['String']['input'];
+}>;
+
+export type GetUserRepositoriesQuery = {
+    readonly __typename?: 'Query';
+    readonly user?: {
+        readonly __typename?: 'User';
+        readonly repositories: {
+            readonly __typename?: 'RepositoryConnection';
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<{
+                readonly __typename?: 'Repository';
+                readonly id: string;
+                readonly name: string;
+                readonly diskUsage?: number;
+                readonly url: any;
+                readonly stargazerCount: number;
+                readonly forkCount: number;
+                readonly description?: string;
+                readonly isPrivate: boolean;
+                readonly languages?: {
+                    readonly __typename?: 'LanguageConnection';
+                    readonly totalCount: number;
+                    readonly totalSize: number;
+                    readonly nodes?: ReadonlyArray<{
+                        readonly __typename?: 'Language';
+                        readonly color?: string;
+                        readonly name: string;
+                    }>;
+                };
+            }>;
+        };
+    };
+};
+
+export const GetRepositoryDocument = gql`
+    query GetRepository($name: String!, $owner: String!) {
+        repository(name: $name, owner: $owner) {
+            id
+            forkCount
+            description
+            isPrivate
+            name
+            url
+            issues(last: 10, filterBy: { states: OPEN }) {
+                nodes {
+                    author {
+                        avatarUrl
+                        login
+                        url
+                    }
+                    body
+                    closed
+                    bodyText
+                    closed
+                    id
+                    title
+                    labels(last: 10) {
+                        nodes {
+                            color
+                            id
+                            name
+                        }
+                    }
+                    url
+                }
+                totalCount
+            }
+            owner {
+                avatarUrl
+                login
+            }
+            stargazerCount
+            languages(last: 10) {
+                edges {
+                    node {
+                        color
+                        id
+                        name
+                    }
+                    size
+                }
+                totalCount
+                totalSize
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetRepositoryQuery__
+ *
+ * To run a query within a React component, call `useGetRepositoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRepositoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRepositoryQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      owner: // value for 'owner'
+ *   },
+ * });
+ */
+export function useGetRepositoryQuery(
+    baseOptions: Apollo.QueryHookOptions<GetRepositoryQuery, GetRepositoryQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetRepositoryQuery, GetRepositoryQueryVariables>(
+        GetRepositoryDocument,
+        options,
+    );
+}
+export function useGetRepositoryLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetRepositoryQuery, GetRepositoryQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetRepositoryQuery, GetRepositoryQueryVariables>(
+        GetRepositoryDocument,
+        options,
+    );
+}
+export type GetRepositoryQueryHookResult = ReturnType<typeof useGetRepositoryQuery>;
+export type GetRepositoryLazyQueryHookResult = ReturnType<typeof useGetRepositoryLazyQuery>;
+export type GetRepositoryQueryResult = Apollo.QueryResult<
+    GetRepositoryQuery,
+    GetRepositoryQueryVariables
+>;
 export const SearchUsersDocument = gql`
     query SearchUsers(
         $after: String
@@ -28619,7 +28977,6 @@ export const SearchUsersDocument = gql`
                     name
                     avatarUrl(size: 100)
                     status {
-                        emoji
                         message
                     }
                 }
@@ -28672,4 +29029,267 @@ export type SearchUsersLazyQueryHookResult = ReturnType<typeof useSearchUsersLaz
 export type SearchUsersQueryResult = Apollo.QueryResult<
     SearchUsersQuery,
     SearchUsersQueryVariables
+>;
+export const GetUserFollowersDocument = gql`
+    query GetUserFollowers($login: String!, $last: Int!) {
+        user(login: $login) {
+            followers(last: $last) {
+                totalCount
+                nodes {
+                    id
+                    avatarUrl
+                    url
+                    login
+                }
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetUserFollowersQuery__
+ *
+ * To run a query within a React component, call `useGetUserFollowersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserFollowersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserFollowersQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *      last: // value for 'last'
+ *   },
+ * });
+ */
+export function useGetUserFollowersQuery(
+    baseOptions: Apollo.QueryHookOptions<GetUserFollowersQuery, GetUserFollowersQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetUserFollowersQuery, GetUserFollowersQueryVariables>(
+        GetUserFollowersDocument,
+        options,
+    );
+}
+export function useGetUserFollowersLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetUserFollowersQuery,
+        GetUserFollowersQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetUserFollowersQuery, GetUserFollowersQueryVariables>(
+        GetUserFollowersDocument,
+        options,
+    );
+}
+export type GetUserFollowersQueryHookResult = ReturnType<typeof useGetUserFollowersQuery>;
+export type GetUserFollowersLazyQueryHookResult = ReturnType<typeof useGetUserFollowersLazyQuery>;
+export type GetUserFollowersQueryResult = Apollo.QueryResult<
+    GetUserFollowersQuery,
+    GetUserFollowersQueryVariables
+>;
+export const GetUserOrganizationsDocument = gql`
+    query GetUserOrganizations($login: String!) {
+        user(login: $login) {
+            organizations(last: 10) {
+                totalCount
+                nodes {
+                    avatarUrl
+                    description
+                    id
+                    email
+                    login
+                    name
+                    url
+                    location
+                }
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetUserOrganizationsQuery__
+ *
+ * To run a query within a React component, call `useGetUserOrganizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserOrganizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserOrganizationsQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *   },
+ * });
+ */
+export function useGetUserOrganizationsQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        GetUserOrganizationsQuery,
+        GetUserOrganizationsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetUserOrganizationsQuery, GetUserOrganizationsQueryVariables>(
+        GetUserOrganizationsDocument,
+        options,
+    );
+}
+export function useGetUserOrganizationsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetUserOrganizationsQuery,
+        GetUserOrganizationsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetUserOrganizationsQuery, GetUserOrganizationsQueryVariables>(
+        GetUserOrganizationsDocument,
+        options,
+    );
+}
+export type GetUserOrganizationsQueryHookResult = ReturnType<typeof useGetUserOrganizationsQuery>;
+export type GetUserOrganizationsLazyQueryHookResult = ReturnType<
+    typeof useGetUserOrganizationsLazyQuery
+>;
+export type GetUserOrganizationsQueryResult = Apollo.QueryResult<
+    GetUserOrganizationsQuery,
+    GetUserOrganizationsQueryVariables
+>;
+export const GetUserProfileDocument = gql`
+    query GetUserProfile($login: String!) {
+        user(login: $login) {
+            id
+            login
+            name
+            url
+            avatarUrl
+            company
+            followers {
+                totalCount
+            }
+            following {
+                totalCount
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetUserProfileQuery__
+ *
+ * To run a query within a React component, call `useGetUserProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserProfileQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *   },
+ * });
+ */
+export function useGetUserProfileQuery(
+    baseOptions: Apollo.QueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(
+        GetUserProfileDocument,
+        options,
+    );
+}
+export function useGetUserProfileLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetUserProfileQuery, GetUserProfileQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetUserProfileQuery, GetUserProfileQueryVariables>(
+        GetUserProfileDocument,
+        options,
+    );
+}
+export type GetUserProfileQueryHookResult = ReturnType<typeof useGetUserProfileQuery>;
+export type GetUserProfileLazyQueryHookResult = ReturnType<typeof useGetUserProfileLazyQuery>;
+export type GetUserProfileQueryResult = Apollo.QueryResult<
+    GetUserProfileQuery,
+    GetUserProfileQueryVariables
+>;
+export const GetUserRepositoriesDocument = gql`
+    query GetUserRepositories($login: String!) {
+        user(login: $login) {
+            repositories(last: 10, ownerAffiliations: OWNER) {
+                nodes {
+                    id
+                    name
+                    diskUsage
+                    url
+                    stargazerCount
+                    forkCount
+                    description
+                    isPrivate
+                    languages(last: 10) {
+                        nodes {
+                            color
+                            name
+                        }
+                        totalCount
+                        totalSize
+                    }
+                }
+                totalCount
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetUserRepositoriesQuery__
+ *
+ * To run a query within a React component, call `useGetUserRepositoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserRepositoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserRepositoriesQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *   },
+ * });
+ */
+export function useGetUserRepositoriesQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        GetUserRepositoriesQuery,
+        GetUserRepositoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetUserRepositoriesQuery, GetUserRepositoriesQueryVariables>(
+        GetUserRepositoriesDocument,
+        options,
+    );
+}
+export function useGetUserRepositoriesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetUserRepositoriesQuery,
+        GetUserRepositoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetUserRepositoriesQuery, GetUserRepositoriesQueryVariables>(
+        GetUserRepositoriesDocument,
+        options,
+    );
+}
+export type GetUserRepositoriesQueryHookResult = ReturnType<typeof useGetUserRepositoriesQuery>;
+export type GetUserRepositoriesLazyQueryHookResult = ReturnType<
+    typeof useGetUserRepositoriesLazyQuery
+>;
+export type GetUserRepositoriesQueryResult = Apollo.QueryResult<
+    GetUserRepositoriesQuery,
+    GetUserRepositoriesQueryVariables
 >;

@@ -1,16 +1,16 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebouncedValue } from '@mantine/hooks';
 import { AutocompleteItem } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
-import { useSearchUsersQuery, SearchType } from '@/gql';
-import { Autocomplete, Loader } from '@/components/ui';
+import { SearchType, useSearchUsersQuery } from '@/gql';
+import { Autocomplete, Loader } from '@/components';
 import { getRouteProfile } from '@/utils/constants';
 import { SearchBoxItem } from './SearchBoxItem';
 
-const SearchBoxComponent = () => {
+export const SearchBox = () => {
     const router = useRouter();
     const [searchValue, setSearchValue] = useState('');
     const [debouncedValue] = useDebouncedValue(searchValue, 500);
@@ -42,14 +42,20 @@ const SearchBoxComponent = () => {
         setSearchValue(val);
     }, []);
 
-    const handleNavigateProfile = useCallback((option: AutocompleteItem) => {
-        router.push(getRouteProfile(option.value));
-    }, []);
+    const handleNavigateProfile = useCallback(
+        (option: AutocompleteItem) => {
+            router.push(getRouteProfile(option.value));
+        },
+        [router],
+    );
 
     useEffect(() => {
-        searchUsersQuery.refetch({
-            query: debouncedValue,
-        });
+        if (debouncedValue.trim()) {
+            searchUsersQuery.refetch({
+                query: debouncedValue,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue]);
 
     return (
@@ -65,9 +71,6 @@ const SearchBoxComponent = () => {
                 searchUsersQuery.loading ? <Loader size={16} /> : <IconSearch size={16} />
             }
             placeholder='Find by username'
-            disabled={searchUsersQuery.loading}
         />
     );
 };
-
-export const SearchBox = memo(SearchBoxComponent);

@@ -1,5 +1,4 @@
-import { Flex, Title, Paper } from '@/components/ui';
-import { SearchBox } from '../SearchBox/SearchBox';
+import { Flex, Title, Paper, SearchBox } from '@/components';
 
 export const Header = () => (
     <header>

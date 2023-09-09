@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Provider } from '@/app/provider';
-import { Header } from '@/components';
-import { Container, Flex } from '@/components/ui';
+import { Box, Container, Flex } from '@/components';
+import { Header } from './Header';
+import { Provider } from './provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,19 +12,25 @@ export const metadata: Metadata = {
     description: 'Github Repositories',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-    return (
-        <html lang='en'>
-            <Provider>
-                <body className={inter.className}>
-                    <Container mt='lg' size='md'>
-                        <Flex direction='column' gap='lg'>
-                            <Header />
-                            <main>{children}</main>
-                        </Flex>
-                    </Container>
-                </body>
-            </Provider>
-        </html>
-    );
+interface RootLayoutProps {
+    children: ReactNode;
+    modal: ReactNode;
 }
+
+const RootLayout = ({ children, modal }: RootLayoutProps) => (
+    <html lang='en'>
+        <body className={inter.className}>
+            <Provider>
+                <Container size='sm' mt='lg' mb='lg'>
+                    <Flex direction='column' gap='lg'>
+                        <Header />
+                        <Box color='gray.8'>{children}</Box>
+                    </Flex>
+                </Container>
+                {modal}
+            </Provider>
+        </body>
+    </html>
+);
+
+export default RootLayout;

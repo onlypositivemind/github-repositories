@@ -7,7 +7,6 @@ query SearchUsers($after: String, $before: String, $first: Int, $last: Int, $que
                 name
                 avatarUrl(size: 100)
                 status {
-                    emoji
                     message
                 }
             }

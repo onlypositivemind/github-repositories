@@ -34,9 +34,6 @@
             "@/components": [
                 "./app/_src/components/"
             ],
-            "@/components/ui": [
-                "./app/_src/components/ui/"
-            ],
             "@/utils/constants": [
                 "./app/_src/utils/constants"
             ]

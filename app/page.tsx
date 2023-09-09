@@ -1,16 +1,11 @@
-// import { Title, Text, Center, Flex } from '@/app/_src/components/ui';
+import { Center, Title } from '@/components';
 
-export default function Home() {
-    // <Center>
-    //     <Flex direction='column'>
-    //         <Title order={1} size='h1'>
-    //             Find github repositories
-    //         </Title>
-    //         <Text fz='xs'>
-    //             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, vero.
-    //         </Text>
-    //     </Flex>
-    // </Center>
+const Home = () => (
+    <Center>
+        <Title order={2} size='h2'>
+            Find the user...
+        </Title>
+    </Center>
+);
 
-    return null;
-}
+export default Home;
