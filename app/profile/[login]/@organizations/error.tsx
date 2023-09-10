@@ -26,7 +26,7 @@ const OrganizationsError = ({ error, reset }: OrganizationsErrorProps) => {
             >
                 <Flex direction='column' gap='xs'>
                     <Text>{error.message}</Text>
-                    <Button color='red' size='xs' variant='outline' onClick={handleReset}>
+                    <Button color='red' size='xs' variant='outline' onClick={handleReset} w='100px'>
                         Try again
                     </Button>
                 </Flex>

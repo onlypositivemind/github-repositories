@@ -4,22 +4,27 @@ import { useCallback, useRef, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal } from '../index';
 
-export const LocalModal = ({ children }: { children: ReactNode }) => {
+interface LocalModalProps {
+    children: ReactNode;
+    title?: ReactNode;
+}
+
+export const LocalModal = ({ children, title }: LocalModalProps) => {
     const overlayRef = useRef(null);
     const wrapperRef = useRef(null);
     const router = useRouter();
 
-    const HandleClose = useCallback(() => {
+    const handleCloseModal = useCallback(() => {
         router.back();
     }, [router]);
 
     const handleKeyDown = useCallback(
-        (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                HandleClose();
+        (ev: KeyboardEvent) => {
+            if (ev.key === 'Escape') {
+                handleCloseModal();
             }
         },
-        [HandleClose],
+        [handleCloseModal],
     );
 
     useEffect(() => {
@@ -37,8 +42,9 @@ export const LocalModal = ({ children }: { children: ReactNode }) => {
             centered
             opened
             className='fixed z-10 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60'
-            onClose={HandleClose}
+            onClose={handleCloseModal}
             closeOnEscape={false}
+            title={title}
         >
             <div
                 ref={wrapperRef}

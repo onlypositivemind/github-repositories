@@ -21,7 +21,7 @@ const RootLayout = ({ children, modal }: RootLayoutProps) => (
     <html lang='en'>
         <body className={inter.className}>
             <Provider>
-                <Container size='sm' mt='lg' mb='lg'>
+                <Container size='sm' mt='lg'>
                     <Flex direction='column' gap='lg'>
                         <Header />
                         <Box color='gray.8'>{children}</Box>

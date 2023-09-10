@@ -20,7 +20,7 @@ const RepositoryModal = async ({ params }: RepositoryModalProps) => {
     }
 
     return (
-        <LocalModal>
+        <LocalModal title='Repository'>
             <Flex align='center' gap='3px'>
                 <Badge size='sm'>{repository.isPrivate ? 'private' : 'public'}</Badge>
                 <IconBook2 size='15px' stroke={1.5} />

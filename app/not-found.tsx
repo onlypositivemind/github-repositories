@@ -8,9 +8,7 @@ const NotFound = () => (
             <Title order={1} size='h1'>
                 Not found
             </Title>
-            <Text fz='xs' td='underline'>
-                {`We couldn't find this page`}
-            </Text>
+            <Text fz='md'>{`We couldn't find this page`}</Text>
         </Flex>
     </Center>
 );

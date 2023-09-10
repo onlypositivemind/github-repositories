@@ -11,7 +11,7 @@ const ProfileLayout = ({ children, repositories, organizations }: ProfileLayoutP
     return (
         <>
             {children}
-            <Flex direction='column' gap='lg' mt='lg' w='100%'>
+            <Flex direction='column' gap='lg' mt='lg' mb='lg' w='100%'>
                 {organizations}
                 {repositories}
             </Flex>

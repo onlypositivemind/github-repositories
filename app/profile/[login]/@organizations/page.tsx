@@ -1,5 +1,5 @@
 import { gql } from '@/gql';
-import { Flex, Text } from '@/components';
+import { Flex, Title } from '@/components';
 import OrganizationItem from './OrganizationItem';
 
 interface OrganizationsProps {
@@ -25,14 +25,16 @@ const Organizations = async ({ params }: OrganizationsProps) => {
     }
 
     return (
-        <>
-            <Text size='lg'>Organizations</Text>
+        <Flex direction='column' gap='xs' w='100%'>
+            <Title order={3} size='h4'>
+                Organizations
+            </Title>
             <Flex direction='column' gap='sm' w='100%'>
                 {organizations.user?.organizations.nodes?.map((organization) => (
                     <OrganizationItem key={organization.id} organization={organization} />
                 ))}
             </Flex>
-        </>
+        </Flex>
     );
 };
 
